@@ -316,13 +316,28 @@ class VTApp(QWidget):
 
         csv_pos_filename = self.tmp_res + "\\anomalies_positives.csv"
         csv_neg_filename = self.tmp_res + "\\anomalies_negatives.csv"
+        csv_suspects = self.tmp_res + "\\suspects.csv"
+        csv_a_surveiller = self.tmp_res + "\\a_surveiller.csv"
+
+        df_a_surveiller = self.a_surveiller()
+        df_suspects = self.suspects()
 
         print(f'Saving data to {csv_neg_filename} / temp res : {self.tmp_res}')
 
+    
         df_anomalies_pos.to_csv(csv_pos_filename, index=False)
         df_anomalies_neg.to_csv(csv_neg_filename, index=False)
+        df_a_surveiller.to_csv(csv_a_surveiller, index=False)
+        df_suspects.to_csv(csv_suspects, index=False)
 
+    def suspects(self):
+        df = self.df
+        return df[(df['Lot Amount'] < 1) & (df['Net Deposits'] < df['First Deposit'])]
 
+    def a_surveiller(self):
+        df = self.df
+        print(df['Net Deposits'])
+        return df[(df['Lot Amount'] < 1) & (df['Net Deposits'] == df['First Deposit']) & (df['First Deposit'] > 0)]
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
