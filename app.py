@@ -324,6 +324,7 @@ class VTApp(QWidget):
 
         print(f'Saving data to {csv_neg_filename} / temp res : {self.tmp_res}')
 
+        print(f'Le broker te doit {self.get_total_due(df_anomalies_pos)}$.')
     
         df_anomalies_pos.to_csv(csv_pos_filename, index=False)
         df_anomalies_neg.to_csv(csv_neg_filename, index=False)
@@ -338,6 +339,21 @@ class VTApp(QWidget):
         df = self.df
         print(df['Net Deposits'])
         return df[(df['Lot Amount'] < 1) & (df['Net Deposits'] == df['First Deposit']) & (df['First Deposit'] > 0)]
+    
+    def get_total_due(self, df_ano_pos):
+        total_due = 0
+        for index, row in df_ano_pos.iterrows():
+            if row['Net Deposits'] >= 1000:
+                expected_commission = 1200
+            elif row['Net Deposits'] >= 500:
+                expected_commission = 700
+            else:
+                expected_commission = 400
+
+            # Calculate the difference and add to total due
+            total_due += expected_commission - row['Commission']
+
+        return total_due
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
