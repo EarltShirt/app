@@ -1,0 +1,16 @@
+name : loader
+channels :
+  - defaults
+  - conda-forge
+dependencies :
+  - pip
+  - python=3.10
+  - pip:
+    - setuptools
+    - numpy
+    - pandas
+    - reportlab
+    - openpyxl
+    - Python-IO
+    - pyqt5
+    - unidecode
